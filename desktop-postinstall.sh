@@ -15,7 +15,9 @@ qtcreator qt5-qmake qt5-doc qdbus-qt5 qt5serialport-examples libqt5xml5 libqt5qu
 virtualbox-dkms virtualbox-guest-utils virtualbox-modules \
 inkscape apache2 \
 libsdl2-dev libsdl2-doc libsdl2-image-2.0-0 libsdl2-image-dev libsdl2-mixer-2.0-0 libsdl2-mixer-dev \
-libsdl2-net-2.0-0 libsdl2-net-dev libsdl2-ttf-dev docker.io"
+libsdl2-net-2.0-0 libsdl2-net-dev libsdl2-ttf-dev docker.io \
+google-earth-pro-stable \
+ffmpeg"
 
 function notify_u ()
 {
