@@ -17,7 +17,9 @@ inkscape apache2 \
 libsdl2-dev libsdl2-doc libsdl2-image-2.0-0 libsdl2-image-dev libsdl2-mixer-2.0-0 libsdl2-mixer-dev \
 libsdl2-net-2.0-0 libsdl2-net-dev libsdl2-ttf-dev docker.io \
 google-earth-pro-stable \
-ffmpeg"
+ffmpeg \
+KiCad \
+siril"
 
 function notify_u ()
 {
