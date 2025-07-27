@@ -4,7 +4,7 @@
 # ctags pgadmin3
 progslist="gcc g++ make cmake unrar nmap traceroute libpcap-dev cppcheck valgrind mc automake \
 autoconf autoconf-doc  fdupes mesa-common-dev libglew-dev libglm-dev hydrogen \
-tuxguitar tuxguitar-alsa jackd audacious audacity mplayer mplayer-gui mplayer-skins gimp qbittorrent \
+tuxguitar tuxguitar-alsa jackd audacious audacity mplayer mplayer-gui mplayer-skins qbittorrent \
 wine-stable timidity tuxguitar-jsa virtualbox virtualbox-guest-additions-iso \
 virtualbox-guest-additions-iso pavucontrol brasero filezilla conky \
 mypaint htop virtualbox-qt whois gtk+-3.0 libpq-dev postgresql-client-common \
@@ -18,8 +18,13 @@ libsdl2-dev libsdl2-doc libsdl2-image-2.0-0 libsdl2-image-dev libsdl2-mixer-2.0-
 libsdl2-net-2.0-0 libsdl2-net-dev libsdl2-ttf-dev docker.io \
 google-earth-pro-stable \
 ffmpeg \
-KiCad \
-siril"
+kicad \
+siril \
+gimp gimp-plugin-registry gimp-data-extras gimp-gap gimp-gap gimp-lensfun \
+gimp-texturize gtkam-gimp libgimp2.0-doc \
+darktable rawtherapee \
+kcachegrind"
+
 
 function notify_u ()
 {
