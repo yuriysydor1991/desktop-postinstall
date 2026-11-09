@@ -29,7 +29,7 @@ nlohmann-json3-dev
 libsdbus-c++-dev libsdbus-c++-doc
 
 # GTK / gtkmm development
-gtk+-3.0 libgtkmm-3.0-dev libgtkmm-3.0-doc
+gtk+-3.0 libgtkmm-3.0-dev libgtkmm-3.0-doc libgtkmm-4.0-dev
 
 # flatpak packager
 flatpak flatpak-builder
