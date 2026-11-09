@@ -124,6 +124,15 @@ gparted
 # names of the packages that apt-get refused to install
 failedlist=()
 
+# the docker daemon TCP socket, bound to the loopback interface only. Keep in
+# mind that the socket is unauthenticated, so every local user and every
+# process of the machine gets a root equivalent access to the docker daemon
+# through it
+docker_tcp_addr="127.0.0.1:2375"
+docker_dropin_dir="/etc/systemd/system/docker.service.d"
+docker_dropin="${docker_dropin_dir}/tcp-socket.conf"
+docker_default_execstart="ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock"
+
 
 function notify_u ()
 {
@@ -136,6 +145,85 @@ function notify_u ()
   else
     echo -e "$*\n"
   fi
+}
+
+# makes the docker daemon listen on the ${docker_tcp_addr} TCP socket in
+# addition to its default unix one
+function configure_docker_tcp ()
+{
+  local fragment=""
+  local execstart=""
+  local try=0
+
+  if ! command -v dockerd &> /dev/null
+  then
+    echo -e "\nWARNING: the dockerd is not installed, skipping the TCP socket configuration\n" >&2
+    return 1
+  fi
+
+  # the ExecStart of the packaged unit only, the drop-ins are not listed here,
+  # so the command line is never extended twice
+  fragment=$(systemctl show -p FragmentPath --value docker.service 2> /dev/null)
+
+  if [[ -r ${fragment} ]]
+  then
+    execstart=$(grep -m1 '^ExecStart=' "${fragment}")
+  fi
+
+  if [[ -z ${execstart} ]]
+  then
+    echo -e "\nWARNING: cannot read the ExecStart of the docker.service, falling back to the default one\n" >&2
+    execstart=${docker_default_execstart}
+  fi
+
+  if [[ ${execstart} == *"tcp://"* ]]
+  then
+    echo -e "\nThe docker.service already listens on a TCP socket, leaving it as is\n"
+    return 0
+  fi
+
+  if ! sudo mkdir -p "${docker_dropin_dir}"
+  then
+    echo -e "\nWARNING: failed to create the ${docker_dropin_dir} directory\n" >&2
+    return 1
+  fi
+
+  # the empty ExecStart= resets the list inherited from the unit file, the
+  # second one replaces it with the extended command line
+  if ! printf '%s\n' \
+         "[Service]" \
+         "ExecStart=" \
+         "${execstart} -H tcp://${docker_tcp_addr}" \
+       | sudo tee "${docker_dropin}" > /dev/null
+  then
+    echo -e "\nWARNING: failed to write the ${docker_dropin} file\n" >&2
+    return 1
+  fi
+
+  sudo systemctl daemon-reload
+
+  if ! sudo systemctl restart docker.service
+  then
+    echo -e "\nWARNING: failed to restart the docker.service with the TCP socket enabled\n" >&2
+    return 1
+  fi
+
+  # the daemon needs a moment before it starts to answer
+  for try in {1..10}
+  do
+    if curl -fsS -m 2 "http://${docker_tcp_addr}/_ping" > /dev/null 2>&1
+    then
+      echo -e "\nThe docker daemon is listening on the ${docker_tcp_addr}"
+      echo -e "Use it with: export DOCKER_HOST=tcp://${docker_tcp_addr}\n"
+      return 0
+    fi
+
+    sleep 1
+  done
+
+  echo -e "\nWARNING: the docker daemon does not answer on the ${docker_tcp_addr}\n" >&2
+
+  return 1
 }
 
 sudo apt update
@@ -159,6 +247,12 @@ done
 #
 # manual commands
 #
+
+# the docker daemon local TCP socket
+if ! configure_docker_tcp
+then
+  notify_u "Failed to configure the docker TCP socket on the ${docker_tcp_addr}"
+fi
 
 # flatpak related
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
