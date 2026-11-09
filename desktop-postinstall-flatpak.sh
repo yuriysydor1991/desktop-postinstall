@@ -154,6 +154,9 @@ com.google.EarthPro ca.desrt.dconf-editor
 # so one has to be picked
 org.winehq.Wine//stable
 
+# web browsers
+org.chromium.Chromium org.mozilla.firefox
+
 # messengers
 com.viber.Viber com.discordapp.Discord
 
