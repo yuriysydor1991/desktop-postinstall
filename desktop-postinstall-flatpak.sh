@@ -127,6 +127,7 @@ io.qt.Linguist
 
 # audio and video players / editors
 org.atheme.audacious org.audacityteam.Audacity org.videolan.VLC
+org.shotcut.Shotcut
 
 # audio production and MIDI
 org.hydrogenmusic.Hydrogen org.pulseaudio.pavucontrol ar.com.tuxguitar.TuxGuitar
@@ -145,6 +146,9 @@ org.darktable.Darktable com.rawtherapee.RawTherapee org.siril.Siril
 
 # electronics design automation
 org.kicad.KiCad
+
+# parametric 3D CAD modelling
+org.freecad.FreeCAD
 
 # desktop applications
 org.qbittorrent.qBittorrent org.filezillaproject.Filezilla org.gnome.Brasero
